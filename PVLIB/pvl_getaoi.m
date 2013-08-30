@@ -17,7 +17,7 @@ function AOI = pvl_getaoi(SurfTilt, SurfAz, SunZen, SunAz)
 %     inputs. SurfTilt must be >=0 and <=180. The tilt angle is defined as
 %     degrees from horizontal (e.g. surface facing up = 0, surface facing
 %     horizon = 90)
-%   SurfAz - a scalar or vector of surface azimuth angles in decimal degrees.
+%   SurfAz - A scalar or vector of the surface azimuth angles in decimal degrees.
 %     If SurfAz is a vector it must be of the same size as all other vector
 %     inputs. SurfAz must be >=0 and <=360. The Azimuth convention is defined
 %     as degrees east of north (e.g. North = 0, East = 90, West = 270).
