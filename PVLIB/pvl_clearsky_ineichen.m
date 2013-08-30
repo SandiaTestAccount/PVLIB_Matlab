@@ -95,7 +95,7 @@ function [ClearSkyGHI, ClearSkyDNI, ClearSkyDHI]= pvl_clearsky_ineichen(Time, Lo
 %   PVL_MAKETIMESTRUCT    PVL_MAKELOCATIONSTRUCT   PVL_EPHEMERIS
 %   PVL_HAURWITZ
 
-% Require the field Location.altitude as required package
+% Require the field Location.altitude 
 % 
 p = inputParser;
 p.addRequired('Time',@isstruct);
