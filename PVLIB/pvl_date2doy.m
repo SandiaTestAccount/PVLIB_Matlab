@@ -13,7 +13,7 @@ function DOY=pvl_date2doy(Year, Month, Day)
 %           to Month(i) and Day(i). 
 %       Month - scalar or vector of month numbers (1-12). Month must be >=1 and <13
 %           Month must be of the same length as Year.
-%       Day - scalar or vector of day of month numbers. Must be of same
+%       Day - scalar or vector of the day of month numbers. Must be of same
 %           length as Year. Day must be >=1 and <32. Day may either be a 
 %           whole or fractional day (e.g. the 12th of the month at noon 
 %           could be 12.5); if fractional, pvl_date2doy will maintain the fractional day.
