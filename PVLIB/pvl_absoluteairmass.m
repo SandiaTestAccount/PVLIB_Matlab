@@ -29,7 +29,7 @@ function AMa = pvl_absoluteairmass(AMrelative,pressure)
 %   clear sky solar irradiance models using theoretical and measured data,"
 %   Solar Energy, vol. 51, pp. 121-138, 1993.
 %
-% See also PVL_RELATIVEAIRMASS for relative airmass calculations 
+% See also PVL_RELATIVEAIRMASS 
 
 p=inputParser;
 p.addRequired('AMrelative', @(x) all(isnumeric(x) | isnan(x)));
