@@ -1,0 +1,288 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>pvl_calcparams_desoto</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-12-17"><meta name="DC.source" content="pvl_calcparams_desoto_help.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>pvl_calcparams_desoto</h1><!--introduction--><p>Applies temperature and irradiance corrections to reference parameters per [1]</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Syntax</a></li><li><a href="#2">Description</a></li><li><a href="#3">Inputs:</a></li><li><a href="#7">Outputs:</a></li><li><a href="#9">Notes:</a></li><li><a href="#10">Example 1</a></li><li><a href="#11">Example 2</a></li><li><a href="#12">References:</a></li><li><a href="#13">See also</a></li></ul></div><h2>Syntax<a name="1"></a></h2><div><ul><li><tt>[IL, I0, Rs, Rsh, nNsVth] = pvl_calcparams_desoto(S, Tcell, alpha_isc, ModuleParameters, dEgdt, EgRef)</tt></li><li><tt>[IL, I0, Rs, Rsh, nNsVth] = pvl_calcparams_desoto(S, Tcell, alpha_isc, ModuleParameters, dEgdt, EgRef, M)</tt></li><li><tt>[IL, I0, Rs, Rsh, nNsVth] = pvl_calcparams_desoto(S, Tcell, alpha_isc, ModuleParameters, dEgdt, EgRef, M, Sref)</tt></li><li><tt>[IL, I0, Rs, Rsh, nNsVth] = pvl_calcparams_desoto(S, Tcell, alpha_isc, ModuleParameters, dEgdt, EgRef, M, Sref, Tref)</tt></li><li><tt>[IL, I0, Rs, Rsh, nNsVth] = pvl_calcparams_desoto(S, Tcell, alpha_isc, ModuleParameters, dEgdt, EgRef, 'Sref', Sref, 'Tref', Tref)</tt></li></ul></div><h2>Description<a name="2"></a></h2><p>Applies the temperature and irradiance corrections to the IL, I0, Rs, Rsh, and a parameters at reference conditions (IL_ref, I0_ref, etc.) according to the De Soto et. al description given in [1]. The results of this correction procedure may be used in a single diode model to determine IV curves at irradiance = S, cell temperature = Tcell.</p><h2>Inputs:<a name="3"></a></h2><div><ul><li><b><tt>S</tt></b> - The irradiance (in W/m^2) absorbed by the module. S must be &gt;= 0.      May be a vector of irradiances, but must be the same size as all      other input vectors. Due to a division by S in the script, any S      value equal to 0 will be set to 1E-10.</li><li><b><tt>Tcell</tt></b> - The average cell temperature of cells within a module in C.      Tcell must be &gt;= -273.15. May be a vector of cell temperatures, but      must be the same size as all other input vectors.</li><li><b><tt>alpha_isc</tt></b> - The short-circuit current temperature coefficient of the      module in units of 1/C.</li><li><b><tt>ModuleParameters</tt></b> - a struct with parameters describing PV module     performance at reference conditions according to DeSoto's paper.     Parameters may be generated or found by lookup. For ease of use, a library     of parameters may be found within the System Advisor Model (SAM) [2].     The SAM library has been provided as a .mat file (     <tt>\Required Data\CECModuleDatabaseSAM2012.11.30.mat</tt>), or may     be read and converted into a .mat file by the SAM library reader     function: <tt>pvl_SAMLibraryReader_CECModules.m</tt>. The ModuleParameters     struct must contain (at least) the     following 5 fields:</li></ul></div><div><ul><li><b><tt>ModuleParameters.a_ref</tt></b> - modified diode ideality factor parameter at          reference conditions (units of eV), a_ref can be calculated from the          usual diode ideality factor (n), number of cells in series (Ns),          and cell temperature (Tcell) per equation (2) in [1].</li><li><b><tt>ModuleParameters.IL_ref</tt></b> - Light-generated current (or photocurrent)          in amperes at reference conditions. This value is referred to          as Iph in some literature.</li><li><b><tt>ModuleParameters.I0_ref</tt></b> - diode reverse saturation current in amperes,          under reference conditions.</li><li><b><tt>ModuleParameters.Rsh_ref</tt></b> - shunt resistance under reference conditions (ohms)</li><li><b><tt>ModuleParameters.Rs_ref</tt></b> - series resistance under reference conditions (ohms)</li></ul></div><div><ul><li><b><tt>EgRef</tt></b> - The energy bandgap at reference temperature (in eV). 1.121 eV      for silicon. EgRef must be &gt;0.</li><li><b><tt>dEgdT</tt></b> - The temperature dependence of the energy bandgap at SRC (in 1/C).      May be either a scalar value (e.g. -0.0002677 as in [1]) or a      vector of dEgdT values corresponding to each input condition (this      may be useful if dEgdT is a function of temperature).</li><li><b><tt>M</tt></b> - An optional airmass modifier, if omitted, M is given a value of 1,      which assumes absolute (pressure corrected) airmass = 1.5. In this      code, M is equal to M/Mref as described in [1] (i.e. Mref is assumed      to be 1). Source [1] suggests that an appropriate value for M      as a function absolute airmass (AMa) may be:      <tt>M = polyval([-0.000126, 0.002816, -0.024459, 0.086257, 0.918093],      AMa)</tt>      M may be a vector, but must be of the same size as all other input      vectors.</li><li><b><tt>Sref</tt></b> - Optional reference irradiance in W/m^2. If omitted, a value of      1000 is used.</li><li><b><tt>Tref</tt></b> - Optional reference cell temperature in C. If omitted, a value of      25 C is used.</li></ul></div><h2>Outputs:<a name="7"></a></h2><div><ul><li><b><tt>IL</tt></b> - Light-generated current in amperes at irradiance=S and      cell temperature=Tcell.</li><li><b><tt>I0</tt></b> - Diode saturation curent in amperes at irradiance S and cell temperature Tcell.</li><li><b><tt>Rs</tt></b> - Series resistance in ohms at irradiance S and cell temperature Tcell.</li><li><b><tt>Rsh</tt></b> - Shunt resistance in ohms at irradiance S and cell temperature Tcell.</li><li><b><tt>nNsVth</tt></b> - modified diode ideality factor at irradiance S and cell temperature      Tcell. Note that in source [1] nNsVth = a (equation 2). nNsVth is the      product of the usual diode ideality factor (n), the number of      series-connected cells in the module (Ns), and the thermal voltage      of a cell in the module (Vth) at a cell temperature of Tcell.</li></ul></div><h2>Notes:<a name="9"></a></h2><p>If the reference parameters in the ModuleParameters struct are read from a database or library of parameters (e.g. System Advisor Model), it is important to use the same EgRef and dEgdT values that were used to generate the reference parameters, regardless of the actual bandgap characteristics of the semiconductor. For example, in the case of the System Advisor Model library, created as described in [2], EgRef and dEgdT for all modules were 1.121 and -0.0002677, respectively.</p><h2>Example 1<a name="10"></a></h2><p>IV curves at a range of irradiance values</p><pre class="codeinput">S = [200 400 600 800 1000 1100]; <span class="comment">%Irradiance Levels (W/m^2) for parameter sets</span>
+Tcell = 45; <span class="comment">%deg C</span>
+
+load(<span class="string">'CECModuleDatabaseSAM2012.11.30.mat'</span>)
+<span class="comment">% Yingli Energy (China) YL295P-35b  # 9764</span>
+Module = CECModuleDB(9764);
+<span class="comment">% Bandgap and Bandgap temperature dependence from [2]</span>
+EgRef = 1.121; <span class="comment">%Reference band gap.</span>
+C = -0.0002677;  <span class="comment">%Band gap dependence on temperature.</span>
+
+[IL, I0, Rs, Rsh, a] = pvl_calcparams_desoto(S, Tcell, Module.alpha_sc, Module, EgRef, C);
+NumPoints = 1000;
+[IVResult] = pvl_singlediode(IL, I0, Rs, Rsh, a, NumPoints);
+
+figure
+<span class="keyword">for</span> i=1:6
+plot(IVResult.V(i,:),IVResult.I(i,:))
+hold <span class="string">on</span>
+scatter(IVResult.Vmp(i),IVResult.Imp(i),<span class="string">'filled'</span>)
+text(2,IVResult.Isc(i)+0.3,[num2str(S(i)) <span class="string">' W/m^2'</span>])
+<span class="keyword">end</span>
+xlabel(<span class="string">'Voltage (V)'</span>)
+ylabel(<span class="string">'Current (A)'</span>)
+title(<span class="string">'Example IV Curve from Single Diode Model'</span>,<span class="string">'FontSize'</span>,14)
+ylim([0 11])
+</pre><img vspace="5" hspace="5" src="pvl_calcparams_desoto_help_01.png" alt=""> <h2>Example 2<a name="11"></a></h2><p>IV curves at a range of cell temperature values and at AM = 3</p><pre class="codeinput">S = 1000; <span class="comment">%Irradiance Levels for parameter sets</span>
+Tcell = [30 40 50 60 70 80]; <span class="comment">%deg C</span>
+AMa = 3; <span class="comment">% Absolute (pressure corrected) airmass</span>
+
+<span class="comment">% Bandgap and Bandgap temperature dependence from [2]</span>
+EgRef = 1.121; <span class="comment">%Reference band gap.</span>
+C = -0.0002677;  <span class="comment">%Band gap dependence on temperature.</span>
+
+<span class="comment">% Representative coefficients for estimating M/Mref for Poly-crystalline Si</span>
+<span class="comment">% From Table A.1 in [1].</span>
+M = polyval([-0.000126 0.002816 -0.024459 0.086257 0.918093], AMa);
+
+[IL, I0, Rs, Rsh, a] = pvl_calcparams_desoto(S, Tcell, Module.alpha_sc, Module, EgRef, C, M);
+NumPoints = 1000;
+[IVResult] = pvl_singlediode(IL, I0, Rs, Rsh, a, NumPoints);
+
+figure
+<span class="keyword">for</span> i=1:6
+plot(IVResult.V(i,:),IVResult.I(i,:))
+hold <span class="string">on</span>
+scatter(IVResult.Vmp(i),IVResult.Imp(i),<span class="string">'filled'</span>)
+
+<span class="keyword">end</span>
+xlabel(<span class="string">'Voltage (V)'</span>)
+ylabel(<span class="string">'Current (A)'</span>)
+title(<span class="string">'IV Curves (Cell Temp from 30-80 deg C'</span>,<span class="string">'FontSize'</span>,14)
+ylim([0 11])
+</pre><img vspace="5" hspace="5" src="pvl_calcparams_desoto_help_02.png" alt=""> <h2>References:<a name="12"></a></h2><div><ul><li>[1] W. De Soto et al., "Improvement and validation of a model for     photovoltaic array performance", Solar Energy, vol 80, pp. 78-88,     2006.</li></ul></div><div><ul><li>[2] A. Dobos, "An Improved Coefficient Calculator for the California     Energy Commission 6 Parameter Photovoltaic Module Model", Journal of     Solar Energy Engineering, vol 134, 2012.</li></ul></div><div><ul><li>[3] D. King et al, "Sandia Photovoltaic Array Performance Model",     SAND2004-3535, Sandia National Laboratories, Albuquerque, NM</li></ul></div><div><ul><li>[4] O. Madelung, "Semiconductors: Data Handbook, 3rd ed." ISBN     3-540-40488-0</li></ul></div><h2>See also<a name="13"></a></h2><p><a href="pvl_sapm_help.html"><tt>pvl_sapm</tt></a>, <a href="pvl_sapmcelltemp_help.html"><tt>pvl_sapmcelltemp</tt></a>, <a href="pvl_singlediode_help.html"><tt>pvl_singlediode</tt></a></p><p>Copyright 2012 Sandia National Laboratories</p><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% pvl_calcparams_desoto 
+% Applies temperature and irradiance corrections to reference parameters per [1] 
+%
+%% Syntax
+% * |[IL, I0, Rs, Rsh, nNsVth] = pvl_calcparams_desoto(S, Tcell, alpha_isc, ModuleParameters, dEgdt, EgRef)|
+% * |[IL, I0, Rs, Rsh, nNsVth] = pvl_calcparams_desoto(S, Tcell, alpha_isc, ModuleParameters, dEgdt, EgRef, M)|
+% * |[IL, I0, Rs, Rsh, nNsVth] = pvl_calcparams_desoto(S, Tcell, alpha_isc, ModuleParameters, dEgdt, EgRef, M, Sref)|
+% * |[IL, I0, Rs, Rsh, nNsVth] = pvl_calcparams_desoto(S, Tcell, alpha_isc, ModuleParameters, dEgdt, EgRef, M, Sref, Tref)|
+% * |[IL, I0, Rs, Rsh, nNsVth] = pvl_calcparams_desoto(S, Tcell, alpha_isc, ModuleParameters, dEgdt, EgRef, 'Sref', Sref, 'Tref', Tref)|
+%   
+%% Description
+% Applies the temperature and irradiance corrections to the IL, I0, Rs, Rsh, and a parameters at reference conditions (IL_ref, I0_ref,
+% etc.) according to the De Soto et. al description given in [1]. The results of this correction procedure may be used in a single diode
+% model to determine IV curves at irradiance = S, cell temperature = Tcell.
+%
+%% Inputs:
+%%
+% * *|S|* - The irradiance (in W/m^2) absorbed by the module. S must be >= 0.
+%      May be a vector of irradiances, but must be the same size as all
+%      other input vectors. Due to a division by S in the script, any S
+%      value equal to 0 will be set to 1E-10.
+% * *|Tcell|* - The average cell temperature of cells within a module in C.
+%      Tcell must be >= -273.15. May be a vector of cell temperatures, but 
+%      must be the same size as all other input vectors.
+% * *|alpha_isc|* - The short-circuit current temperature coefficient of the 
+%      module in units of 1/C.
+% * *|ModuleParameters|* - a struct with parameters describing PV module
+%     performance at reference conditions according to DeSoto's paper. 
+%     Parameters may be generated or found by lookup. For ease of use, a library 
+%     of parameters may be found within the System Advisor Model (SAM) [2].
+%     The SAM library has been provided as a .mat file (
+%     |\Required Data\CECModuleDatabaseSAM2012.11.30.mat|), or may
+%     be read and converted into a .mat file by the SAM library reader
+%     function: |pvl_SAMLibraryReader_CECModules.m|. The ModuleParameters 
+%     struct must contain (at least) the 
+%     following 5 fields:
+%%
+% * *|ModuleParameters.a_ref|* - modified diode ideality factor parameter at
+%          reference conditions (units of eV), a_ref can be calculated from the
+%          usual diode ideality factor (n), number of cells in series (Ns),
+%          and cell temperature (Tcell) per equation (2) in [1].
+% * *|ModuleParameters.IL_ref|* - Light-generated current (or photocurrent) 
+%          in amperes at reference conditions. This value is referred to 
+%          as Iph in some literature.
+% * *|ModuleParameters.I0_ref|* - diode reverse saturation current in amperes, 
+%          under reference conditions.
+% * *|ModuleParameters.Rsh_ref|* - shunt resistance under reference conditions (ohms)
+% * *|ModuleParameters.Rs_ref|* - series resistance under reference conditions (ohms)
+%%
+% * *|EgRef|* - The energy bandgap at reference temperature (in eV). 1.121 eV
+%      for silicon. EgRef must be >0.
+% * *|dEgdT|* - The temperature dependence of the energy bandgap at SRC (in 1/C).
+%      May be either a scalar value (e.g. -0.0002677 as in [1]) or a
+%      vector of dEgdT values corresponding to each input condition (this
+%      may be useful if dEgdT is a function of temperature).
+% * *|M|* - An optional airmass modifier, if omitted, M is given a value of 1,
+%      which assumes absolute (pressure corrected) airmass = 1.5. In this
+%      code, M is equal to M/Mref as described in [1] (i.e. Mref is assumed
+%      to be 1). Source [1] suggests that an appropriate value for M
+%      as a function absolute airmass (AMa) may be:
+%      |M = polyval([-0.000126, 0.002816, -0.024459, 0.086257, 0.918093],
+%      AMa)|
+%      M may be a vector, but must be of the same size as all other input
+%      vectors. 
+% * *|Sref|* - Optional reference irradiance in W/m^2. If omitted, a value of
+%      1000 is used.
+% * *|Tref|* - Optional reference cell temperature in C. If omitted, a value of
+%      25 C is used.
+%  
+%% Outputs:   
+%%
+% * *|IL|* - Light-generated current in amperes at irradiance=S and 
+%      cell temperature=Tcell. 
+% * *|I0|* - Diode saturation curent in amperes at irradiance S and cell temperature Tcell. 
+% * *|Rs|* - Series resistance in ohms at irradiance S and cell temperature Tcell.
+% * *|Rsh|* - Shunt resistance in ohms at irradiance S and cell temperature Tcell.
+% * *|nNsVth|* - modified diode ideality factor at irradiance S and cell temperature
+%      Tcell. Note that in source [1] nNsVth = a (equation 2). nNsVth is the 
+%      product of the usual diode ideality factor (n), the number of 
+%      series-connected cells in the module (Ns), and the thermal voltage 
+%      of a cell in the module (Vth) at a cell temperature of Tcell.
+%
+%% Notes:
+% If the reference parameters in the ModuleParameters struct are read
+% from a database or library of parameters (e.g. System Advisor Model),
+% it is important to use the same EgRef and dEgdT values that
+% were used to generate the reference parameters, regardless of the 
+% actual bandgap characteristics of the semiconductor. For example, in 
+% the case of the System Advisor Model library, created as described in 
+% [2], EgRef and dEgdT for all modules were 1.121 and -0.0002677,
+% respectively.
+%
+%% Example 1
+% IV curves at a range of irradiance values
+S = [200 400 600 800 1000 1100]; %Irradiance Levels (W/m^2) for parameter sets
+Tcell = 45; %deg C 
+
+load('CECModuleDatabaseSAM2012.11.30.mat')
+% Yingli Energy (China) YL295P-35b  # 9764
+Module = CECModuleDB(9764);
+% Bandgap and Bandgap temperature dependence from [2]
+EgRef = 1.121; %Reference band gap. 
+C = -0.0002677;  %Band gap dependence on temperature. 
+
+[IL, I0, Rs, Rsh, a] = pvl_calcparams_desoto(S, Tcell, Module.alpha_sc, Module, EgRef, C);
+NumPoints = 1000;
+[IVResult] = pvl_singlediode(IL, I0, Rs, Rsh, a, NumPoints);
+
+figure
+for i=1:6
+plot(IVResult.V(i,:),IVResult.I(i,:))
+hold on
+scatter(IVResult.Vmp(i),IVResult.Imp(i),'filled')
+text(2,IVResult.Isc(i)+0.3,[num2str(S(i)) ' W/m^2'])
+end
+xlabel('Voltage (V)')
+ylabel('Current (A)')
+title('Example IV Curve from Single Diode Model','FontSize',14)
+ylim([0 11])
+%% Example 2
+% IV curves at a range of cell temperature values and at AM = 3
+S = 1000; %Irradiance Levels for parameter sets
+Tcell = [30 40 50 60 70 80]; %deg C 
+AMa = 3; % Absolute (pressure corrected) airmass
+
+% Bandgap and Bandgap temperature dependence from [2]
+EgRef = 1.121; %Reference band gap. 
+C = -0.0002677;  %Band gap dependence on temperature. 
+
+% Representative coefficients for estimating M/Mref for Poly-crystalline Si 
+% From Table A.1 in [1].
+M = polyval([-0.000126 0.002816 -0.024459 0.086257 0.918093], AMa);
+
+[IL, I0, Rs, Rsh, a] = pvl_calcparams_desoto(S, Tcell, Module.alpha_sc, Module, EgRef, C, M);
+NumPoints = 1000;
+[IVResult] = pvl_singlediode(IL, I0, Rs, Rsh, a, NumPoints);
+
+figure
+for i=1:6
+plot(IVResult.V(i,:),IVResult.I(i,:))
+hold on
+scatter(IVResult.Vmp(i),IVResult.Imp(i),'filled')
+
+end
+xlabel('Voltage (V)')
+ylabel('Current (A)')
+title('IV Curves (Cell Temp from 30-80 deg C','FontSize',14)
+ylim([0 11])
+%% References:
+%
+% * [1] W. De Soto et al., "Improvement and validation of a model for
+%     photovoltaic array performance", Solar Energy, vol 80, pp. 78-88,
+%     2006.
+%
+% * [2] A. Dobos, "An Improved Coefficient Calculator for the California
+%     Energy Commission 6 Parameter Photovoltaic Module Model", Journal of
+%     Solar Energy Engineering, vol 134, 2012.
+%
+% * [3] D. King et al, "Sandia Photovoltaic Array Performance Model",
+%     SAND2004-3535, Sandia National Laboratories, Albuquerque, NM
+%
+% * [4] O. Madelung, "Semiconductors: Data Handbook, 3rd ed." ISBN
+%     3-540-40488-0
+%
+%% See also 
+% <pvl_sapm_help.html |pvl_sapm|>,  
+% <pvl_sapmcelltemp_help.html |pvl_sapmcelltemp|>,  
+% <pvl_singlediode_help.html |pvl_singlediode|>  
+%%
+% Copyright 2012 Sandia National Laboratories
+
+
+
+
+##### SOURCE END #####
+--></body></html>

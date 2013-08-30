@@ -1,0 +1,229 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>pvl_snlinverterdb</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-12-17"><meta name="DC.source" content="pvl_snlinverterdb_help.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>pvl_snlinverterdb</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Syntax</a></li><li><a href="#3">Warning!</a></li><li><a href="#4">Description</a></li><li><a href="#5">Inputs</a></li><li><a href="#7">Outputs</a></li><li><a href="#10">Example</a></li><li><a href="#11">References</a></li><li><a href="#13">See Also</a></li></ul></div><h2>Syntax<a name="1"></a></h2><div><ul><li><tt>Inverterparam = pvl_snlinverterdb(uniqueID)</tt></li><li><tt>Inverterparam = pvl_snlinverterdb(uniqueID, DBfile)</tt></li></ul></div><h2>Warning!<a name="3"></a></h2><p>This function will be removed from the PV_LIB Toolbox in future versions.  To replace it, we have included a .mat file with inverter parameters  from NREL's SAM application, which are updated on a regular basis.</p><h2>Description<a name="4"></a></h2><p>Retrieve a set of performance parameter coefficients for the Sandia Performance Model for Grid-Connected Photovoltaic Inverters [1]. The performance parameters are provided as an Excel workbook in the same form as the "Inverters_2012.1.12.xlsx" file included with the toolbox. A description of each of the inverter parameters associated with the model is given in the Output section of this help document, also, the column numbers of the data within the Excel sheet is listed.</p><h2>Inputs<a name="5"></a></h2><div><ul><li><b><tt>uniqueID</tt></b> - Each inverter in the workbook is given a unique     identification number. Provide the unique identification number of     the desired inverter.  Unique ID is the unique identifier given to each inverter in the Sandia Inverter database. It is <b>NOT</b> the row number.</li><li><b><tt>DBfile</tt></b> - an optional argument which allows the user to select which     "database" file should be read. A full file path may also be necessary     if the desired file is not in the MATLAB working path. If the input     DBfile is not included, the user will be prompted to select a file     using a browsing window. The file should be an Excel workbook with     a single worksheet called "Parameters". Row 1 should be text     headers. Rows 2-n contain the data specified below in columns 1     through 22 (A through V).</li></ul></div><h2>Outputs<a name="7"></a></h2><div><ul><li><b><tt>Inverterparam</tt></b> - A struct of inverter performance parameters with     the following components. Note that for more detailed descriptions of     each component, please consult reference [1]. Unfilled values in the     spreadsheet will be returned as <tt>NaN</tt>.</li></ul></div><div><ul><li><b><tt>Inverterparam.Manufacturer</tt></b> = Inverter manufacturer name (text) given in     column 1.</li><li><b><tt>Inverterparam.Model</tt></b> = Inverter model number (text), may include a     notation as to the output voltage level of the inverter given in     column 2.</li><li><b><tt>Inverterparam.Source</tt></b> = Source of test data (text) given in column 3.     Typically test data is graciously provided by the California Energy     Commission (CEC) as part of their Go Solar California! campaign.</li><li><b><tt>Inverterparam.Vac</tt></b> = AC output voltage, in volts RMS, given in column 4.</li><li><b><tt>Inverterparam.Vintage</tt></b> = The year in which the test was conducted, given     in column 5.</li><li><b><tt>Inverterparam.Pac0</tt></b> = Maximum AC power "rating" for the inverter at     nominal operating conditions, in watts. Assumed to be an upper limit.     Given in column 6.</li><li><b><tt>Inverterparam.Pdc0</tt></b> = The DC power level, in watts, at which the AC     power rating (Pac0) is achieved under nominal operating conditons.     Given in column 7.</li><li><b><tt>Inverterparam.Vdc0</tt></b> = The DC voltage level, in volts, at which the AC     power rating is achieved at the reference operating condition. Given     in column 8.</li><li><b><tt>Inverterparam.Ps0</tt></b>  = The DC power, in watts, required to start the     inversion process or self-consumption by the inverter. Given in     column 9.</li><li><b><tt>Inverterparam.C0</tt></b> = Parameter defining the curvature of the relationship     between AC power and DC power at the reference operating condition,     the default value of 0 gives a linear relationship. Units of 1/watts.     Given in column 10.</li><li><b><tt>Inverterparam.C1</tt></b> = Empirical coefficient allowing Pdc0 to vary linearly     with DC voltage input, default value is 0. Units of 1/volts. Given in     column 11.</li><li><b><tt>Inverterparam.C2</tt></b> = Empirical coefficient allowing Ps0 to vary linearly     with DC voltage input, default value is 0. Units of 1/volts. Given in     column 12.</li><li><b><tt>Inverterparam.C3</tt></b> = Empirical coefficient allowing C0 to vary linearly     with DC voltage input, default value is 0. Units of 1/volts. Given in     column 13.</li><li><b><tt>Inverterparam.Pnt</tt></b> = AC power, in watts, consumed at night (tare-loss)     to maintain circuitry required to sense PV array voltage. Given in     column 14.</li><li><b><tt>Inverterparam.Vdcmax</tt></b> = Maximum DC voltage which may be applied to the     inverter, in volts. This data is typically found on the specification     sheet, but is not required for performance modeling. Given in column     15.</li><li><b><tt>Inverterparam.Idcmax</tt></b> = Maximum DC current which may be applied to the     inverter, in amps. This data is typically found on the specification     sheet, but is not required for performance modeling. Given in column     16.</li><li><b><tt>Inverterparam.MPPTLow</tt></b> = Minimum DC voltage, in volts, at which the     maximum power point tracking (MPPT) algorithm of the inverter may     function. This data is typically found on the specification     sheet, but is not required for performance modeling. Given in column     17.</li><li><b><tt>Inverterparam.MPPTHi</tt></b> = Maximum DC voltage, in volts, at which the     maximum power point tracking (MPPT) algorithm of the inverter may     function. This data is typically found on the specification     sheet, but is not required for performance modeling. Given in column     18.</li><li><b><tt>Inverterparam.TambLow</tt></b> = Minimum operating temperature of the inverter     in degrees C. This data is typically found on the specification     sheet, but is not required for performance modeling. Given in column     19.</li><li><b><tt>Inverterparam.TambHi</tt></b> = Maximum operating temperature of the inverter     in degrees C. This data is typically found on the specification     sheet, but is not required for performance modeling. Given in column     20.</li><li><b><tt>Inverterparam.Weight</tt></b> = Weight of the inverter in either pounds or     kilograms (generally it is unknown due to poor record keeping).     This data is typically found on the specification sheet, but is not     required for performance modeling. Given in column 21.</li><li><b><tt>Inverterparam.UniqueID</tt></b> = The unique identification number for each     inverter. The manufacturer or model number may change, but the unique     ID will remain the same. Given in column 22.</li></ul></div><h2>Example<a name="10"></a></h2><pre class="codeinput">DBfile = <span class="string">'Inverters_2012.1.12.xlsx'</span>;
+Inverterparam = pvl_snlinverterdb(176, DBfile)
+</pre><pre class="codeoutput">Warning: The function pvl_snlinverterdb will be removed in a future version of
+PV_LIB. For a more up-to-date list of Sandia Inverter Model coefficients, see
+included .mat file which captureS the latest coefficients from the System
+Advisor Model libraries, or use the SAM library reader function to generate a
+new .mat file. 
+
+Inverterparam = 
+
+    Manufacturer: 'PV Powered'
+           Model: 'PVP2500'
+          Source: 'CEC'
+             Vac: 240
+         Vintage: 2006
+            Pac0: 2500
+            Pdc0: 2.6301e+03
+            Vdc0: 219.2317
+             Ps0: 41.3618
+              C0: -1.2650e-05
+              C1: 6.6747e-05
+              C2: 0.0017
+              C3: 6.1375e-04
+             Pnt: 3.9000
+          Vdcmax: 500
+          Idcmax: 20
+         MPPTLow: 140
+          MPPTHi: 450
+         TambLow: -20
+          TambHi: 40
+          Weight: 70
+        UniqueID: 176
+
+</pre><h2>References<a name="11"></a></h2><div><ul><li>King, D. et al., 2007, "Performance Model for Grid-Connected Photovoltaic Inverters, SAND2007-5036, Sandia National Laboratories, Albuquerque, NM <a href="http://energy.sandia.gov/wp/wp-content/gallery/uploads/Performance-Model-for-Grid-Connected-Photovoltaic-Inverters.pdf">Web Link</a></li></ul></div><h2>See Also<a name="13"></a></h2><p><a href="pvl_snlinverter_help.html"><tt>pvl_snlinverter</tt></a></p><p>Copyright 2012 Sandia National Laboratories</p><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% pvl_snlinverterdb
+%
+%% Syntax
+%%
+% * |Inverterparam = pvl_snlinverterdb(uniqueID)|
+% * |Inverterparam = pvl_snlinverterdb(uniqueID, DBfile)|
+%
+%% Warning!
+% This function will be removed from the PV_LIB Toolbox in future versions.
+%  To replace it, we have included a .mat file with inverter parameters
+%  from NREL's SAM application, which are updated on a regular basis.
+%% Description
+% Retrieve a set of performance parameter coefficients for the 
+% Sandia Performance Model for Grid-Connected Photovoltaic Inverters [1]. 
+% The performance parameters are provided as an Excel workbook in the
+% same form as the "Inverters_2012.1.12.xlsx" file included with 
+% the toolbox. A description of each of the inverter parameters associated
+% with the model is given in the Output section of this help document, also,
+% the column numbers of the data within the Excel sheet is listed.
+%
+%% Inputs
+%%
+% * *|uniqueID|* - Each inverter in the workbook is given a unique
+%     identification number. Provide the unique identification number of
+%     the desired inverter.  Unique ID is the unique identifier given to each inverter in the Sandia
+% Inverter database. It is *NOT* the row number.
+% * *|DBfile|* - an optional argument which allows the user to select which
+%     "database" file should be read. A full file path may also be necessary
+%     if the desired file is not in the MATLAB working path. If the input
+%     DBfile is not included, the user will be prompted to select a file
+%     using a browsing window. The file should be an Excel workbook with
+%     a single worksheet called "Parameters". Row 1 should be text
+%     headers. Rows 2-n contain the data specified below in columns 1
+%     through 22 (A through V).
+%
+%% Outputs
+%%
+% * *|Inverterparam|* - A struct of inverter performance parameters with
+%     the following components. Note that for more detailed descriptions of
+%     each component, please consult reference [1]. Unfilled values in the
+%     spreadsheet will be returned as |NaN|.
+%%
+% * *|Inverterparam.Manufacturer|* = Inverter manufacturer name (text) given in  
+%     column 1.
+% * *|Inverterparam.Model|* = Inverter model number (text), may include a
+%     notation as to the output voltage level of the inverter given in
+%     column 2.
+% * *|Inverterparam.Source|* = Source of test data (text) given in column 3.
+%     Typically test data is graciously provided by the California Energy
+%     Commission (CEC) as part of their Go Solar California! campaign.
+% * *|Inverterparam.Vac|* = AC output voltage, in volts RMS, given in column 4.
+% * *|Inverterparam.Vintage|* = The year in which the test was conducted, given
+%     in column 5.
+% * *|Inverterparam.Pac0|* = Maximum AC power "rating" for the inverter at
+%     nominal operating conditions, in watts. Assumed to be an upper limit.
+%     Given in column 6.
+% * *|Inverterparam.Pdc0|* = The DC power level, in watts, at which the AC
+%     power rating (Pac0) is achieved under nominal operating conditons.
+%     Given in column 7.
+% * *|Inverterparam.Vdc0|* = The DC voltage level, in volts, at which the AC
+%     power rating is achieved at the reference operating condition. Given
+%     in column 8.
+% * *|Inverterparam.Ps0|*  = The DC power, in watts, required to start the
+%     inversion process or self-consumption by the inverter. Given in
+%     column 9.
+% * *|Inverterparam.C0|* = Parameter defining the curvature of the relationship
+%     between AC power and DC power at the reference operating condition,
+%     the default value of 0 gives a linear relationship. Units of 1/watts.
+%     Given in column 10.
+% * *|Inverterparam.C1|* = Empirical coefficient allowing Pdc0 to vary linearly
+%     with DC voltage input, default value is 0. Units of 1/volts. Given in
+%     column 11.
+% * *|Inverterparam.C2|* = Empirical coefficient allowing Ps0 to vary linearly
+%     with DC voltage input, default value is 0. Units of 1/volts. Given in
+%     column 12.
+% * *|Inverterparam.C3|* = Empirical coefficient allowing C0 to vary linearly
+%     with DC voltage input, default value is 0. Units of 1/volts. Given in
+%     column 13.
+% * *|Inverterparam.Pnt|* = AC power, in watts, consumed at night (tare-loss)
+%     to maintain circuitry required to sense PV array voltage. Given in
+%     column 14.
+% * *|Inverterparam.Vdcmax|* = Maximum DC voltage which may be applied to the
+%     inverter, in volts. This data is typically found on the specification
+%     sheet, but is not required for performance modeling. Given in column
+%     15.
+% * *|Inverterparam.Idcmax|* = Maximum DC current which may be applied to the
+%     inverter, in amps. This data is typically found on the specification
+%     sheet, but is not required for performance modeling. Given in column
+%     16.
+% * *|Inverterparam.MPPTLow|* = Minimum DC voltage, in volts, at which the
+%     maximum power point tracking (MPPT) algorithm of the inverter may
+%     function. This data is typically found on the specification
+%     sheet, but is not required for performance modeling. Given in column
+%     17.
+% * *|Inverterparam.MPPTHi|* = Maximum DC voltage, in volts, at which the
+%     maximum power point tracking (MPPT) algorithm of the inverter may
+%     function. This data is typically found on the specification
+%     sheet, but is not required for performance modeling. Given in column
+%     18.
+% * *|Inverterparam.TambLow|* = Minimum operating temperature of the inverter
+%     in degrees C. This data is typically found on the specification
+%     sheet, but is not required for performance modeling. Given in column
+%     19.
+% * *|Inverterparam.TambHi|* = Maximum operating temperature of the inverter
+%     in degrees C. This data is typically found on the specification
+%     sheet, but is not required for performance modeling. Given in column
+%     20.
+% * *|Inverterparam.Weight|* = Weight of the inverter in either pounds or
+%     kilograms (generally it is unknown due to poor record keeping). 
+%     This data is typically found on the specification sheet, but is not 
+%     required for performance modeling. Given in column 21.
+% * *|Inverterparam.UniqueID|* = The unique identification number for each
+%     inverter. The manufacturer or model number may change, but the unique
+%     ID will remain the same. Given in column 22.
+%
+%% Example
+%
+DBfile = 'Inverters_2012.1.12.xlsx';
+Inverterparam = pvl_snlinverterdb(176, DBfile)
+%% References
+%%
+% * King, D. et al., 2007, "Performance Model for Grid-Connected Photovoltaic Inverters,
+% SAND2007-5036, Sandia National Laboratories, Albuquerque, NM 
+% <http://energy.sandia.gov/wp/wp-content/gallery/uploads/Performance-Model-for-Grid-Connected-Photovoltaic-Inverters.pdf
+% Web Link>
+%
+%% See Also 
+% <pvl_snlinverter_help.html |pvl_snlinverter|>
+%%
+% Copyright 2012 Sandia National Laboratories
+
+
+
+
+##### SOURCE END #####
+--></body></html>

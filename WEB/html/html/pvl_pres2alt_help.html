@@ -1,0 +1,121 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>pvl_pres2alt</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-12-17"><meta name="DC.source" content="pvl_pres2alt_help.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>pvl_pres2alt</h1><!--introduction--><p>Determine altitude from site pressure</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Syntax</a></li><li><a href="#2">Description</a></li><li><a href="#3">Assumptions</a></li><li><a href="#5">Inputs</a></li><li><a href="#7">Outputs</a></li><li><a href="#9">Example</a></li><li><a href="#10">References</a></li><li><a href="#11">See Also</a></li></ul></div><h2>Syntax<a name="1"></a></h2><p><tt>altitude = pvl_pres2alt(pressure)</tt></p><h2>Description<a name="2"></a></h2><p><tt>altitide = pvl_pres2alt(pressure)</tt> determines the <tt>altitude</tt> (in meters above sea level) of a   site on Earth's surface given its atmospheric pressure (in Pascals).   Output <tt>altitude</tt> is given in meters above sea level. <tt>altitude</tt> is of the same size   as <tt>pressure</tt>.</p><h2>Assumptions<a name="3"></a></h2><div><ul><li>Pressure at mean sea level = 101325 Pa</li><li>Temperature at zero altitude = 288.15 K</li><li>Gravitational acceleration = 9.80665 m/s^2</li><li>Lapse rate = -6.5E-3 K/m</li><li>Gas constant for air = 287.053 J/(kg*K)</li><li>Relative Humidity = 0%</li></ul></div><h2>Inputs<a name="5"></a></h2><div><ul><li><b><tt>pressure</tt></b> - atmospheric pressure (in Pascals) of a site on Earth's surface given its altitude</li></ul></div><h2>Outputs<a name="7"></a></h2><div><ul><li><b><tt>altitude</tt></b> - altitude (in meters above sea level)</li></ul></div><h2>Example<a name="9"></a></h2><pre class="codeinput">Alt1 = pvl_pres2alt(101325) <span class="comment">% Sea level, result should be near zero</span>
+Alt2 = pvl_pres2alt(80000) <span class="comment">% Approximate pressure near 2,000 meters abobe sea level</span>
+</pre><pre class="codeoutput">
+Alt1 =
+
+    0.1243
+
+
+Alt2 =
+
+   1.9491e+03
+
+</pre><h2>References<a name="10"></a></h2><pre class="language-matlab">"A Quick <span class="string">Derivation</span> <span class="string">relating</span> <span class="string">altitude</span> <span class="string">to</span> <span class="string">air</span> <span class="string">pressure"</span> <span class="string">from</span> <span class="string">Portland</span>
+State <span class="string">Aerospace</span> <span class="string">Society</span>, Version <span class="string">1.03</span>, 12/22/2004.
+</pre><h2>See Also<a name="11"></a></h2><p><a href="pvl_alt2pres_help.html"><tt>pvl_alt2pres</tt></a>, <a href="pvl_makelocationstruct_help.html"><tt>pvl_makelocationstruct</tt></a></p><p>Copyright 2012 Sandia National Laboratories</p><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% pvl_pres2alt 
+% Determine altitude from site pressure
+%
+%% Syntax
+% |altitude = pvl_pres2alt(pressure)| 
+%
+%% Description
+% |altitide = pvl_pres2alt(pressure)|
+% determines the |altitude| (in meters above sea level) of a 
+%   site on Earth's surface given its atmospheric pressure (in Pascals). 
+%   Output |altitude| is given in meters above sea level. |altitude| is of the same size 
+%   as |pressure|.
+%
+%% Assumptions
+%%
+%
+% * Pressure at mean sea level = 101325 Pa
+% * Temperature at zero altitude = 288.15 K
+% * Gravitational acceleration = 9.80665 m/s^2
+% * Lapse rate = -6.5E-3 K/m
+% * Gas constant for air = 287.053 J/(kg*K)
+% * Relative Humidity = 0%
+%
+%% Inputs
+%%
+% * *|pressure|* - atmospheric pressure (in Pascals) of a 
+% site on Earth's surface given its altitude
+%
+%% Outputs
+%%
+% * *|altitude|* - altitude (in meters above sea level)
+%
+%% Example
+Alt1 = pvl_pres2alt(101325) % Sea level, result should be near zero 
+Alt2 = pvl_pres2alt(80000) % Approximate pressure near 2,000 meters abobe sea level
+%% References
+%   "A Quick Derivation relating altitude to air pressure" from Portland
+%   State Aerospace Society, Version 1.03, 12/22/2004.
+%
+%% See Also
+% <pvl_alt2pres_help.html |pvl_alt2pres|>,    
+% <pvl_makelocationstruct_help.html |pvl_makelocationstruct|>
+%%
+% Copyright 2012 Sandia National Laboratories
+
+##### SOURCE END #####
+--></body></html>
