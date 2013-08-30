@@ -18,7 +18,7 @@ function DOY=pvl_date2doy(Year, Month, Day)
 %           whole or fractional day (e.g. the 12th of the month at noon 
 %           could be 12.5); if fractional, pvl_date2doy will maintain the fractional day.
 %
-%   If Year or Month are non-integers, the decimal portion of the values 
+%   If the Year or Month are non-integers, the decimal portion of the values 
 %   will be dropped (floor function). The calculation utilizes the 400 year
 %   cycle for leap years.
 %
