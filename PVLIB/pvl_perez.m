@@ -1,17 +1,16 @@
 function SkyDiffuse = pvl_perez(SurfTilt, SurfAz, DHI, DNI, HExtra, SunZen, SunAz, AM, varargin)
-% PVL_PEREZ Determine diffuse irradiance from the sky on a tilted surface using one of the Perez models
+% PVL_PEREZ Determine diffuse irradiance from the sky on a tilted surface using the Perez model
 %
 % Syntax
 %   SkyDiffuse = pvl_perez(SurfTilt, SurfAz, DHI, DNI, HExtra, SunZen, SunAz, AM)
 %   SkyDiffuse = pvl_perez(SurfTilt, SurfAz, DHI, DNI, HExtra, SunZen, SunAz, AM, model)
 %
 % Description
-%   Perez models determine the diffuse irradiance from the sky (ground
-%   reflected irradiance is not included in this algorithm) on a tilted
+%   The Perez model [3] determines the sky diffuse irradiance on a tilted
 %   surface using the surface tilt angle, surface azimuth angle, diffuse
 %   horizontal irradiance, direct normal irradiance, extraterrestrial
 %   irradiance, sun zenith angle, sun azimuth angle, and relative (not
-%   pressure-corrected) airmass. Optionally a selector may be used to use
+%   pressure-corrected) airmass. An optional selector may be used to specify
 %   any of Perez's model coefficient sets.
 %
 % Inputs:
@@ -64,17 +63,18 @@ function SkyDiffuse = pvl_perez(SurfTilt, SurfAz, DHI, DNI, HExtra, SunZen, SunA
 %     the input vector(s).
 %
 % References
-%   [1] Loutzenhiser P.G. et. al. "Empirical validation of models to compute
-%   solar irradiance on inclined surfaces for building energy simulation"
-%   2007, Solar Energy vol. 81. pp. 254-267
+%   [1] Loutzenhiser P.G. et. al., 2007. Empirical validation of models to compute
+%   solar irradiance on inclined surfaces for building energy simulation, 
+%   Solar Energy vol. 81. pp. 254-267.
 %   [2] Perez, R., Seals, R., Ineichen, P., Stewart, R., Menicucci, D., 1987. A new
 %   simplified version of the Perez diffuse irradiance model for tilted
 %   surfaces. Solar Energy 39 (3), 221–232.
 %   [3] Perez, R., Ineichen, P., Seals, R., Michalsky, J., Stewart, R., 1990.
 %   Modeling daylight availability and irradiance components from direct
 %   and global irradiance. Solar Energy 44 (5), 271–289.
-%   [4] Perez, R. et. al 1988. "The Development and Verification of the
-%   Perez Diffuse Radiation Model". SAND88-7030
+%   [4] Perez, R. et. al 1988. The Development and Verification of the
+%   Perez Diffuse Radiation Model,.SAND88-7030, Sandia National
+%   Laboratories.
 %
 % See also PVL_EPHEMERIS   PVL_EXTRARADIATION   PVL_ISOTROPICSKY
 %       PVL_HAYDAVIES1980   PVL_REINDL1990   PVL_KLUCHER1979   PVL_KINGDIFFUSE
@@ -84,15 +84,15 @@ function SkyDiffuse = pvl_perez(SurfTilt, SurfAz, DHI, DNI, HExtra, SunZen, SunA
 %
 %
 
-p = inputParser;
-p.addRequired('SurfTilt', @(x) all(isnumeric(x) & x<=180 & x>=0 & isvector(x)));
-p.addRequired('SurfAz', @(x) all(isnumeric(x) & x<=360 & x>=0 & isvector(x)));
-p.addRequired('DHI', @(x) all(isnumeric(x) & isvector(x) & x>=0));
-p.addRequired('DNI', @(x) all(isnumeric(x) & isvector(x) & x>=0));
-p.addRequired('HExtra', @(x) all(isnumeric(x) & isvector(x) & x>=0));
-p.addRequired('SunZen', @(x) all(isnumeric(x) & x<=180 & x>=0 & isvector(x)));
-p.addRequired('SunAz', @(x) all(isnumeric(x) & x<=360 & x>=0 & isvector(x)));
-p.addRequired('AM', @(x) (all(((isnumeric(x) & x>=0) | isnan(x))) & isvector(x)));
+p=inputParser;
+p.addRequired('SurfTilt', @(x) isnumeric(x) && isvector(x) && all((x>=0 & x<=180) | isnan(x)));
+p.addRequired('SurfAz', @(x) isnumeric(x) && isvector(x) && all((x>=0 & x<=360) | isnan(x)));
+p.addRequired('DHI', @(x) isnumeric(x) && isvector(x) && all(x>=0 | isnan(x)));
+p.addRequired('DNI', @(x) isnumeric(x) && isvector(x) && all(x>=0 | isnan(x)));
+p.addRequired('HExtra', @(x) isnumeric(x) && isvector(x) && all(x>=0 | isnan(x)));
+p.addRequired('SunZen', @(x) isnumeric(x) && isvector(x) && all((x>=0 & x<=180) | isnan(x)));
+p.addRequired('SunAz', @(x) isnumeric(x) && isvector(x) && all((x>=0 & x<=360) | isnan(x)));
+p.addRequired('AM', @(x) isnumeric(x) && isvector(x) && all(x>=0 | isnan(x)));
 p.addOptional('model', '1990', @(x) ischar(x));
 p.parse(SurfTilt, SurfAz, DHI, DNI, HExtra, SunZen, SunAz, AM, varargin{:});
 

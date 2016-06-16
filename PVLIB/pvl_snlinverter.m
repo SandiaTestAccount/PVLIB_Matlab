@@ -16,9 +16,12 @@ function ACPower = pvl_snlinverter(Inverter, Vdc, Pdc)
 %   Inverter - A struct defining the inverter to be used, giving the
 %     inverter performance parameters according to the Sandia
 %     Grid-Connected Photovoltaic Inverter Model (SAND 2007-5036) [1]. A set of
-%     inverter performance parameters are provided with PV_LIB, or may be
-%     generated from a System Advisor Model (SAM) [2] library using the SAM
-%     library reader functions. Required struct components are:
+%     inverter performance parameters are provided with PV_LIB at
+%     <PV_LIB Folder>/Required Data/<Current SNLInverter database name>, 
+%     or may be generated from a System Advisor Model (SAM) [2] library 
+%     using the SAM library reader functions. 
+%   
+%   Required struct components are:
 %   Inverter.Pac0 - AC-power output from inverter based on input power and voltage, (W) 
 %   Inverter.Pdc0 - DC-power input to inverter, typically assumed to be equal to the PV array maximum
 %               power, (W)
@@ -61,12 +64,12 @@ function ACPower = pvl_snlinverter(Inverter, Vdc, Pdc)
 %   [2] System Advisor Model web page. https://sam.nrel.gov.
 %
 % See also
-%   PVL_SAPM    PVL_SAMLIBRARYREADER_SNLINVERTERS
+%   PVL_SAPM    PVL_SAMLIBRARYREADER_SNLINVERTERS   PVL_ADRINVERTER
 
 p = inputParser;
 p.addRequired('Inverter',@(x) isstruct(x))
-p.addRequired('Vdc', @(x) all(isnumeric(x) & x>=0 & isvector(x)));
-p.addRequired('Pdc', @(x) all(isnumeric(x) & x>=0 & isvector(x)));
+p.addRequired('Vdc', @(x) isnumeric(x) && isvector(x) && all(x>=0 | isnan(x)));
+p.addRequired('Pdc', @(x) isnumeric(x) && isvector(x) && all(x>=0 | isnan(x)));
 p.parse(Inverter, Vdc, Pdc);
 
 Pac0 = p.Results.Inverter.Pac0;

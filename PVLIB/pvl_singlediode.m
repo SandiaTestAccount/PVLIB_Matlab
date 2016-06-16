@@ -91,15 +91,15 @@ function [Result] = pvl_singlediode(IL, I0, Rs, Rsh, nNsVth, varargin)
 
 % Vth is the thermal voltage of the cell in VOLTS
 % n is the usual diode ideality factor, assumed to be linear
-% nVth is n*Vth
+% nNsVth is n*Ns*Vth
 
 p = inputParser;
-p.addRequired('IL',@(x) all(x>=0) & isnumeric(x) & isvector(x) );
-p.addRequired('I0', @(x) all(x>=0) & isnumeric(x) & isvector(x));
-p.addRequired('Rs', @(x) all(x>=0) & isnumeric(x) & isvector(x));
-p.addRequired('Rsh', @(x) all(x>=0) & isnumeric(x) & isvector(x));
-p.addRequired('nNsVth',@(x) all(x>=0) & isnumeric(x) & isvector(x) );
-p.addOptional('NumPoints', 0, @(x) isfinite(x) & isscalar(x));
+p.addRequired('IL',@(x) isnumeric(x) && isvector(x) && all(x>=0 | isnan(x)));
+p.addRequired('I0', @(x) isnumeric(x) && isvector(x) && all(x>=0 | isnan(x)));
+p.addRequired('Rs', @(x) isnumeric(x) && isvector(x) && all(x>=0 | isnan(x)));
+p.addRequired('Rsh', @(x) isnumeric(x) && isvector(x) && all(x>=0 | isnan(x)));
+p.addRequired('nNsVth',@(x) isnumeric(x) && isvector(x) && all(x>=0 | isnan(x)));
+p.addOptional('NumPoints', 0, @(x) isfinite(x) && isscalar(x));
 p.parse(IL, I0, Rs, Rsh, nNsVth, varargin{:});
 
 % Make all inputs into column vectors
@@ -129,30 +129,34 @@ if (MaxVectorSize > 1 && any(VectorSizes == 1))
     nNsVth = nNsVth.*ones(MaxVectorSize , 1);
 end
 
+Imax = zeros(MaxVectorSize, 1);
+Pmp = zeros(MaxVectorSize, 1);
+Vmax = zeros(MaxVectorSize, 1);
+Ix = zeros(MaxVectorSize, 1);
+Ixx = zeros(MaxVectorSize, 1);
+Voc = zeros(MaxVectorSize, 1);
+Isc = zeros(MaxVectorSize, 1);
+
+u = IL>0;
+
 % Take care of any pesky non-integers by rounding up
 NumPoints = ceil(NumPoints);
 
-
-% Set the tolerance of the fminbnd function to be 1e-8 instead of the
-% default 1e-4
-defaultoptions = optimset('fminbnd');
-options = optimset(defaultoptions, 'TolX', 1e-8);
-
-
 % Find Isc using Lambert W
-Isc = I_from_V(Rsh, Rs, nNsVth, 0, I0, IL);
+Isc(u) = I_from_V(Rsh(u), Rs(u), nNsVth(u), 0, I0(u), IL(u));
 
 % Find Voc using Lambert W
-Voc=V_from_I(Rsh, Rs, nNsVth, 0, I0, IL);
+Voc(u) = V_from_I(Rsh(u), Rs(u), nNsVth(u), 0, I0(u), IL(u));
 
-% Invert the Power-Current curve. Find the current where the inverted power
-% is minimized. This is Imax.
-[Imax negPmp ~] = pvl_fminbnd_vec(@(x) V_from_I(Rsh, Rs, nNsVth, x, I0, IL).*x.*-1, 0, Isc, options);
-Vmax = -1*negPmp./Imax;
+
+% Calculate I, V and P at the maximum power point
+
+[Imax(u), Vmax(u), Pmp(u)]=calc_Pmp_bisect(IL(u),I0(u),nNsVth(u),Rs(u),Rsh(u));
+
 
 % Find Ix and Ixx using Lambert W
-Ix = I_from_V(Rsh, Rs, nNsVth, 0.5*Voc, I0, IL);
-Ixx = I_from_V(Rsh, Rs, nNsVth, 0.5*(Voc+Vmax), I0, IL);
+Ix(u) = I_from_V(Rsh(u), Rs(u), nNsVth(u), 0.5*Voc(u), I0(u), IL(u));
+Ixx(u) = I_from_V(Rsh(u), Rs(u), nNsVth(u), 0.5*(Voc(u)+Vmax(u)), I0(u), IL(u));
 
 
 % If the user says they want a curve of with number of points equal to
@@ -164,9 +168,12 @@ Ixx = I_from_V(Rsh, Rs, nNsVth, 0.5*(Voc+Vmax), I0, IL);
 % curve. Thus the nth (V,I) point of curve m would be found as follows:
 % (Result.V(m,n),Result.I(m,n)).
 if NumPoints >= 2
+   Result.I = zeros(MaxVectorSize, NumPoints);
+   Result.V = zeros(MaxVectorSize, NumPoints);
    s = ones(1,NumPoints); % shaping vector to shape the column vector parameters into 2-D matrices
    Result.V = (Voc)*(0:1/(NumPoints-1):1);
-   Result.I = I_from_V(Rsh*s, Rs*s, nNsVth*s, Result.V, I0*s, IL*s);
+   Result.I(u,:) = I_from_V(Rsh(u)*s, Rs(u)*s, nNsVth(u)*s, Result.V(u,:), I0(u)*s, IL(u)*s);
+   Result.I(:,end) = 0; % Make sure that I at Voc (the last point) is always 0
 end
 
 % Wrap up the results into the Result struct
@@ -175,26 +182,23 @@ Result.Vmp = Vmax;
 Result.Imp = Imax;
 Result.Ix = Ix;
 Result.Ixx = Ixx;
-Result.Pmp = -negPmp;
+Result.Pmp = Pmp;
 Result.Isc = Isc;
 
 end
 
 
-
-
-
 function [V]=V_from_I(Rsh, Rs, nNsVth, I, Io, Iphi)
 
 % calculates V from I per Eq 3 Jain and Kapoor 2004
-% uses Lambert W implemented in wapr_vec.m
+% uses Lambert W implemented in pvl_lambertw.m
 % Rsh, nVth, I, Io, Iphi can all be vectors
 % Rs can be a vector, but should be a scalar
 
 % Generate the argument of the LambertW function
 argW = (Io.*Rsh./nNsVth) .* ...
     exp(Rsh.*(-I+Iphi+Io)./(nNsVth));
-inputterm = wapr_vec(argW); % Get the LambertW output
+inputterm = pvl_lambertw(argW); % Get the LambertW output
 f = isnan(inputterm); % If argW is too big, the LambertW result will be NaN and we have to go to logspace
 
 % If it is necessary to go to logspace
@@ -223,16 +227,119 @@ end
 function [I]=I_from_V(Rsh, Rs, nNsVth, V, Io, Iphi)
 
 % calculates I from V per Eq 2 Jain and Kapoor 2004
-% uses Lambert W implemented in wapr_vec.m
+% uses Lambert W implemented in pvl_lambertw.m
 % Rsh, nVth, V, Io, Iphi can all be vectors
 % Rs can be a vector, but should be a scalar
 
 argW = Rs.*Io.*Rsh.*...
     exp(Rsh.*(Rs.*(Iphi+Io)+V)./(nNsVth.*(Rs+Rsh)))./...
     (nNsVth.*(Rs + Rsh));
-inputterm = wapr_vec(argW);
+inputterm = pvl_lambertw(argW);
 
 % Eqn. 4 in Jain and Kapoor, 2004
 I = -V./(Rs + Rsh) - (nNsVth./Rs) .* inputterm + ...
     Rsh.*(Iphi + Io)./(Rs + Rsh);
+end
+
+function [W] = calc_phi_exact(Imp, IL, Io, a, Rsh)
+
+% calculates W(phi) where phi is the argument of the
+% Lambert W function in V = V(I) at I=Imp ([2], Eq. 3).  Formula for
+% phi is given in code below as argw.
+
+% phi
+argw = Rsh.*Io./a .*exp(Rsh.*(IL + Io - Imp)./a);
+
+% Screen out any negative values for argw
+u = argw>0;
+W(~u)=NaN;
+
+tmp = pvl_lambertw(argw(u));
+
+ff = isnan(tmp);
+
+% take care of any numerical overflow by evaluating log(W(phi))
+if any(ff)
+    logargW = log(Rsh(u)) + log(Io(u)) - log(a(u)) + Rsh(u).*(IL(u) + Io(u) - Imp(u))./a(u);
+    % Three iterations of Newton-Raphson method to solve w+log(w)=logargW.
+    % The initial guess is w=logargW. Where direct evaluation (above) results
+    % in NaN from overflow, 3 iterations of Newton's method gives 
+    % approximately 8 digits of precision.
+    x = logargW;  
+    for i=1:5
+        x = x.*((1-log(x)+logargW)./(1+x));
+    end;
+    tmp(ff) = x(ff);
+end;
+
+W(u) = tmp;
+
+end
+
+function Imp=calc_Imp_bisect(Iph,Io,a,Rs,Rsh)
+
+% calculates the value of Imp (current at maximum power point) for an IV
+% curve with parameters Iph, Io, a, Rs, Rsh.  Imp is found as the value of
+% I for which g(I)=dP/dV (I) = 0.
+
+% Set up lower and upper bounds on Imp
+A = 0*Iph;
+B = Iph+Io;
+
+% Detect when lower and upper bounds are not consistent with finding the
+% zero of dP/dV
+
+gA=g(A,Iph,Io,a,Rs,Rsh);
+gB=g(B,Iph,Io,a,Rs,Rsh);
+
+if any(gA.*gB>0)
+    % where gA*gB>0, then there is a problem with the IV curve parameters.
+    % In the event where gA and gB have the same sign, alert the user with
+    % a warning and replace erroneous cases with NaN
+    errorvalues = gA .* gB > 0;
+    warning(['Warning: pvl_singlediode has found at least one case where' ...
+        ' the single diode parameters are such that dP/dV may not have' ...
+        ' a zero. A NaN value has been reported for all such cases.'])
+    A(errorvalues) = NaN; % This will set Imp values where gA*gB>0 to NaN
+end
+
+% midpoint is initial guess for Imp
+p = (A+B)./2;
+err = g(p,Iph,Io,a,Rs,Rsh);  % value of dP/dV at initial guess p
+
+while max(abs(B-A))>1e-6   % set precision of estimate of Imp to 1e-6 (A)
+    gA=g(A,Iph,Io,a,Rs,Rsh); % value of dP/dV at left endpoint
+    u=(gA.*err)<0;
+    B(u)=p(u);
+    A(~u)=p(~u);
+    p=(A+B)/2;
+    err = g(p,Iph,Io,a,Rs,Rsh);
+end;
+Imp = p;
+
+end
+
+function y=g(I,Iph,Io,a,Rs,Rsh)
+
+% calculates dP/dV exactly, using p=I*V=I*V(I), where V=V(I) uses the
+% Lambert's W function W(phi) ([2], Eq. 3).
+
+[z]=calc_phi_exact(I,Iph,Io,a,Rsh);  % calculate W(phi)
+z = z(:);
+
+% calculate dP/dV
+y = (Iph+Io-2*I).*Rsh - 2*I.*Rs - a.*z +I.*Rsh.*z./(1+z);
+
+end
+
+function [Imp, Vmp, Pmp]=calc_Pmp_bisect(Iph,Io,a,Rs,Rsh)
+
+% Returns Imp, Vmp, Pmp for the IV curve described by input parameters.
+% Vectorized.
+
+Imp=calc_Imp_bisect(Iph,Io,a,Rs,Rsh);  % find Imp
+[z]=calc_phi_exact(Imp,Iph,Io,a,Rsh);  % Calculate W(phi) at Imp, where W is Lambert's W function and phi is its argument ([2], Eq. 3)
+z = z(:);
+Vmp=(Iph+Io-Imp).*Rsh - Imp.*Rs - a.*z;  % Compute V from Imp and W(phi)
+Pmp = Vmp.*Imp;
 end
