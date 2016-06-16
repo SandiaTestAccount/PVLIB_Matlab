@@ -1,6 +1,6 @@
 function AMa = pvl_absoluteairmass(AMrelative,pressure)
 % PVL_ABSOLUTEAIRMASS Determine absolute (pressure corrected) airmass from relative airmass and pressure
-% 
+%
 % Syntax
 % AMa = pvl_absoluteairmass(AMrelative, pressure)
 %
@@ -29,11 +29,11 @@ function AMa = pvl_absoluteairmass(AMrelative,pressure)
 %   clear sky solar irradiance models using theoretical and measured data,"
 %   Solar Energy, vol. 51, pp. 121-138, 1993.
 %
-% See also PVL_RELATIVEAIRMASS 
+% See also PVL_RELATIVEAIRMASS
 
 p=inputParser;
-p.addRequired('AMrelative', @(x) all(isnumeric(x) | isnan(x)));
-p.addRequired('pressure', @(x) all(isnumeric(x) & x>=0));
+p.addRequired('AMrelative', @(x) isnumeric(x));
+p.addRequired('pressure', @(x) isnumeric(x) & all(x>=0 | isnan(x)));
 p.parse(AMrelative,pressure);
 
 AMa = AMrelative.*pressure/101325;
